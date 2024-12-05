@@ -1,0 +1,305 @@
+//    import validation from './LoginValidation'
+//   import { ToastContainer, toast } from 'react-toastify';
+//     import 'react-toastify/dist/ReactToastify.css';
+ //   toast.success('Registration successful!'); // Success alert
+        // Reset the form or navigate to another page here
+    //    setValues({ name: '', email: '', password: '' }); // Reset form values
+      //  navigate('/login'); // Navigate to login page after successful registration
+
+
+
+
+
+
+
+
+
+/*
+  const handleRegister = (event) => {
+    event.preventDefault();
+    axios.post('http://localhost:8084/register', values)
+      .then(res => {
+       
+        console.log("Registration successful:");
+    
+      })
+      .catch(err => {
+      if (err.response) {
+        console.error("Error:");
+      } else {
+        console.error("Registration failed:");
+      }
+      });
+  };
+
+
+
+ /* if (err.response) {
+          // Checking if error is due to duplicate email
+          if (err.response.status === 409 && err.response.data.message === 'Email already exists') {
+       //     toast.error('Duplicate email found! Please use a different email.');
+       console.error('Duplicate email found');
+          } else {
+            console.error("Error:", err.response.data.message); 
+     //      toast.error(err.response.data.message); // Display other errors
+          }
+        } else {
+          console.error("Registration failed:", err);
+        }
+          */
+
+  /*  33RD TIME
+const handleRegister = (event) => {
+  event.preventDefault();
+
+  axios.post('http://localhost:8084/register', values)
+    .then(res => {
+      console.log("Registration successful:", res.data.message);
+      toast.success('Registration successful!'); // Success alert
+      // Reset the form or navigate to another page here
+    })
+    .catch(err => {
+      if (err.response) {
+        // Checking if error is due to duplicate email
+        if (err.response.status === 400 && err.response.data.message === 'Email already exists') {
+          toast.error('Duplicate email found! Please use a different email.');
+        } else {
+          console.error("Error:", err.response.data.message); 
+          alert(err.response.data.message); // Display other errors
+        }
+      } else {
+        console.error("Registration failed:", err);
+      }
+    });
+};
+
+
+
+
+
+/*
+    const handleRegister = (event) => {
+      event.preventDefault();
+    
+      axios.post('http://localhost:8084/register', values)
+        .then(res => {
+          console.log("Registration successful:", res.data.message);
+          window.alert('Registration successful!'); // Success alert
+          // Navigate to another page or reset the form here
+        })
+        .catch(err => {
+          if (err.response) {
+            if (err.response.data.message === 'Email already exists') {
+              window.alert('Duplicate email found! Please use a different email.');
+            } else {
+              console.log("Error:", err.response.data.message); 
+              setErrors({ ...errors, registration: err.response.data.message });
+            }
+          } else {
+            console.log("Registration failed:", err);
+          }
+        });
+    };
+
+/*  const handleRegister = (event) => {
+    event.preventDefault();
+   // setErrors(validation(values));
+  //  if(errors.name==="" &&errors.email===""&&errors.password===""){
+      axios.post('http://localhost:8084/register', values)
+.then(res=> console.log("registered sucesfully"))
+  
+  //{
+//navigate('/');
+// }
+//)
+
+    .catch(err=>console.log(err));
+//    }
+  }
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+app.post('/register', (req, res) => {
+  const { name, email, password } = req.body;
+  const checkEmailQuery = 'SELECT * FROM users123 WHERE email = ?';
+
+  db.query(checkEmailQuery, [email], (err, result) => {
+    if (err) {
+      console.error('Database error during email check:', err);
+      return res.status(500).send('Server error during registration');
+    }
+
+    if (result.length > 0) {
+      // Email already exists
+      return res.status(400).send('Email already exists');
+    }
+*//*
+  const sql = 'INSERT INTO users123 ( name, email, password) VALUES (?, ?, ?)';
+  db.query(sql, [ name, email, password], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send('Error during registration');
+    }
+    res.send('Registration successful');
+  });
+}); 
+}); 
+*/
+
+/*
+app.post('/register', (req, res) => {
+  //const { name1, email1, password1 } = req.body;
+const values=[
+  req.body.name1,
+req.body.email,
+req.body.password,
+]
+console.log(req.body); // Add this to verify what data is being received
+
+  // Check for missing fields
+  if (!name1 || !email || !password) {
+   
+      return res.json(err);
+  }
+  const insertUserSql = 'INSERT INTO users123 (`name`, `email`, `password`) VALUES (?, ?, ?)';
+
+  db.query(insertUserSql, values, (err, result) => {
+    if (err) {
+      console.error('Database error:', err);
+      return res.json(err);
+    }
+   
+    return res.json({ message: 'Registration successful', result });
+  });
+});
+*/
+
+
+
+
+
+
+
+
+==================================LOGIN=======================
+
+
+  /*
+  const handleSubmit = (event) => {
+    event.preventDefault();
+   // setErrors(validation(values));
+//if(errors.email==="" && errors.password==="")
+//{
+  axios.post('http://localhost:8084/login', values)
+  .then(res=>{
+if(res.data==="Success"){
+navigate('/home')
+
+setAlertInfo({
+  show: true,
+  color: 'success',
+  message: `Registration successful: ${res.data.message}`
+});
+
+
+
+ }
+
+else{
+  setAlertInfo({
+    show: true,
+    type: 'red',
+    message: `Error: ${err.message}`
+  });
+
+}})
+.catch(err => console.log(err)
+setAlertInfo({
+  show: true,
+  type: 'red',
+  message: `Error: ${err.message}`
+});
+);
+
+  }
+ // const handleSubmit = (event) => {
+ //   event.preventDefault();
+//  setErrors(validation(values));}
+
+*/
+
+
+ /*   try {
+      const res = await axios.post('http://localhost:8084/login', credentials); // Correct login endpoint
+      console.log(res.data);
+      // Assuming the API returns user data on successful login
+      setUser(res.data.user); // Set the logged-in user in context
+      navigate('/Home'); // Redirect to dashboard or some other route after login
+    } catch (error) {
+      console.error("Login error:", error);
+      // Handle error (e.g., display error message)
+    }
+  };*/
+
+
+
+  /* <Link to="/login" className=" hover:underline ml-2">
+   //   Logout
+      */</Link>
+
+
+
+      /*
+const verifyUser = (req, res, next) => {
+  const token = req.cookies.token;
+  console.log("Token from request:", token); // Debug log
+  if (!token) {
+    return res.status(401).json({ Error: "User not authenticated" });
+  }
+  jwt.verify(token, "jwt-secret-key", (err, decoded) => {
+    if (err) {
+      console.log("Token verification error:", err); // Debug log
+      return res.status(401).json({ Error: "Token is not valid" });
+    }
+    req.session.name = decoded.name;
+    next();
+  });
+};
+
+/*
+const verifyUser = (req, res, next) => {
+  const token = req.cookies.token;
+  if (!token) {
+    return res.status(401).json({ Error: "User not authenticated" });
+  }
+  jwt.verify(token, "jwt-secret-key", (err, decoded) => {
+    if (err) {
+      return res.status(403).json({ Error: "Token is not valid" });
+    }
+    req.session.name = decoded.name;
+    next();
+  });
+};*/
+
+
+
+
+

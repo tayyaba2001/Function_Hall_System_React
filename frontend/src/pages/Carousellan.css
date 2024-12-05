@@ -1,0 +1,18 @@
+.c-item {
+ height: 900px; 
+
+}
+@media (min-width: 600px) {
+  .c-item {
+    height: 500px; /* Larger height for larger screens */
+  }
+}
+.c-img {
+  height: 100%;
+  width: auto;
+
+
+
+  object-fit: cover;
+  filter: brightness(0.6);
+}

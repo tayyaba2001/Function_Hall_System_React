@@ -1,0 +1,19 @@
+
+.image-slide {
+    width: 90%;
+    height: auto;
+    transition: transform 0.3s ease-in-out; /* Smooth transition for zoom */
+  }
+  
+  @media (max-width: 720px) {
+    .image-slide {
+      transform: scale(1.2); /* Zoom the image by 20% */
+    }
+  }
+  
+  @media (max-width: 600px) {
+    .image-slide {
+      transform: scale(1.4); /* Zoom the image by 40% */
+    }
+  }
+  

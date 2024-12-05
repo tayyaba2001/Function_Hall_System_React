@@ -1,0 +1,117 @@
+User Manual for Configuration and Changes in MySQL
+1. MySQL Installation
+Install MySQL version 8.0.25 as it is compatible and does not raise errors.
+2. Configuration File Changes
+Modify the MySQL configuration file my.ini found at:
+
+
+C:\ProgramData\MySQL\MySQL Server 8.0\my.ini
+In this file, make the following changes:
+
+Set the maximum allowed packet size:
+
+max_allowed_packet=64M
+Set secure_file_priv to an empty string:
+
+secure_file_priv=""
+
+
+
+
+3. MySQL Workbench Setup
+Login to MySQL Workbench with the localhost setup.
+
+Set the password for your MySQL root user as appmysql. If the password differs, make sure to update it accordingly in your server.js or backend configuration.
+
+Create a Database:
+
+
+CREATE DATABASE invent_system;
+USE invent_system;
+
+Create a users123 table:
+
+-- Create users123 table
+CREATE TABLE `users123` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `email` varchar(255) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `role` enum('admin','visitor','staff') DEFAULT 'visitor',
+  `profile_image` longblob,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=109 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Create bookings table
+CREATE TABLE `bookings` (
+  `booking_id` int NOT NULL AUTO_INCREMENT,
+  `client_id` int DEFAULT NULL,
+  `event_date` date DEFAULT NULL,
+  `checkin_time` datetime DEFAULT NULL,
+  `checkout_time` datetime DEFAULT NULL,
+  `num_adults` int DEFAULT NULL,
+  `num_children` int DEFAULT NULL,
+  `total_cost` decimal(10,2) DEFAULT NULL,
+  `deposit_advance` decimal(10,2) DEFAULT NULL,
+  `deposit_venue` decimal(10,2) DEFAULT NULL,
+  `bstatus` enum('pending','booked','available','canceled') DEFAULT 'available',
+  `catering` enum('yes','no') DEFAULT 'no',
+  `decoration` enum('yes','no') DEFAULT 'no',
+  `photography` enum('yes','no') DEFAULT 'no',
+  `supplier` enum('yes','no') DEFAULT 'no',
+  `setup_time` datetime DEFAULT NULL,
+  `cleanup_time` datetime DEFAULT NULL,
+  `pdf_file_from_admin` longblob,
+  `pdf_file_from_client` longblob,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `venue_name` varchar(100) DEFAULT NULL,
+  `venue_id` int DEFAULT NULL,
+  PRIMARY KEY (`booking_id`),
+  KEY `client_id` (`client_id`),
+  KEY `venue_name` (`venue_name`),
+  KEY `fk_venue` (`venue_id`),
+  CONSTRAINT `bookings_ibfk_1` FOREIGN KEY (`client_id`) REFERENCES `users123` (`id`),
+  CONSTRAINT `bookings_ibfk_2` FOREIGN KEY (`venue_name`) REFERENCES `venues` (`venue_name`),
+  CONSTRAINT `fk_venue` FOREIGN KEY (`venue_id`) REFERENCES `venues` (`venue_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Create venues table
+CREATE TABLE `venues` (
+  `venue_id` int NOT NULL AUTO_INCREMENT,
+  `venue_name` varchar(100) DEFAULT NULL,
+  `location` varchar(255) DEFAULT NULL,
+  `capacity` int DEFAULT NULL,
+//  `status` enum('booked','available') DEFAULT 'available',
+  `picture1` longblob,
+  `picture2` longblob,
+  `venue_details` text,
+  `venue_price` decimal(10,2) DEFAULT NULL,
+  `gst` decimal(5,2) DEFAULT NULL,
+  `total_price` decimal(10,2) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`venue_id`),
+  UNIQUE KEY `venue_name` (`venue_name`),
+  CONSTRAINT `venues_chk_1` CHECK (`venue_price` > 0),
+  CONSTRAINT `venues_chk_2` CHECK (`gst` >= 0),
+  CONSTRAINT `venues_chk_3` CHECK (`total_price` > 0)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+
+
+
+
+after it  open 2 terminals
+
+cd frontend
+npm install
+npm run dev
+
+cd backend  ---->in server.js in backend directory change aabsoulute file path to desired path within your directorypath/backend/public/images
+npm install
+npm start
+
+
+

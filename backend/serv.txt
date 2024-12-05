@@ -1,0 +1,126 @@
+ /* if(result.length > 0){
+   // return res.json({ message: "Success", Login: true });
+  req.session.name=result[0].name;
+   return res.json({ message: "Success", Login: true ,name:req.session.name});
+  //req.session.username = result[0].name;
+  }
+  else{
+    return res.json({ message: "Fail", Login: false });
+  //  return res.json({Login:false})
+  }
+  */
+
+
+  /*
+app.post('/register', (req, res) => {
+  const { name, email, password } = req.body;
+  const checkEmailQuery = 'SELECT * FROM users123 WHERE email = ?';
+
+  db.query(checkEmailQuery, [email], async (err, result) => {
+    if (err) {
+      console.error('Database error during email check:', err);
+      return res.status(500).json({ message: 'Server error during registration' });
+    }
+
+    if (result.length > 0) {
+      // Email already exists
+      return res.status(409).json({ message: 'Email already exists' });
+    } else {
+      const salt = await bcrypt.genSalt(10);
+     const hashedPassword = await bcrypt.hash(password, salt);
+      const sql = 'INSERT INTO users123 (name, email, password) VALUES (?, ?, ?)';
+bcrypt.hash(req.body.password.toString(),salt,(err,hash)=>{if(err) return res.json({Error:"error for hashing password"});
+     
+      db.query(sql, [name, email, hashedPassword], (err, result) => {
+        if (err) {
+          console.error(err);
+          return res.status(500).json({ message: 'Error during registration' });
+        }
+        res.status(200).json({ message: 'Registration successful' });
+      });
+   })
+    }
+  });
+});
+
+*/
+
+=========================verifyUser
+/*
+const verifyUser =(req,res,next)=>{
+const token=req.cookies.token;
+if(!token){
+  return res.status(401).json({ Error: "User not authenticated" });
+}
+  else{
+jwt.verify(token,"jwt-secret-key",(err,decoded)=>{
+  if(err){
+      return res.json({Error:"Token is not okay"});}
+  else{
+req.name=decoded.name;
+next();  
+  }
+})
+
+  }
+}
+*/
+
+
+
+================================================MONGOOOSE .JSX TXT====================================================
+
+  // Define the schema for the 'functionhall' collection with binary data for both images and videos
+const functionhallSchema = new mongoose.Schema({
+  userId: {
+    type: String,
+    required: true
+  },
+  text: {
+    type: String,
+    required: true
+  },
+  images: [{
+    data: Buffer,
+    contentType: String  // To store the MIME type of the image (e.g., 'image/jpeg')
+  }],
+  videos: [{
+    data: Buffer,
+    contentType: String  // To store the MIME type of the video (e.g., 'video/mp4')
+  }],
+  captions: String
+});
+
+// Create a model for 'functionhall'
+const functionhall = mongoose.model('functionhall', functionhallSchema);
+
+// Example of reading an image and video file from the filesystem and saving them as binary data
+const imagePath = '../frontend/public/pro4.jpg';  // Replace with your actual image path
+const videoPath = '../frontend/public/vid401.mp4';  // Replace with your actual video path
+
+const imageFile = {
+  data: fs.readFileSync(imagePath),  // Read the image file as a buffer
+  contentType: 'image/jpeg'  // Set the content type of the image
+};
+
+const videoFile = {
+  data: fs.readFileSync(videoPath),  // Read the video file as a buffer
+  contentType: 'video/mp4'  // Set the content type of the video
+};
+
+// Create a new document with both image and video binary data
+const newComment = new functionhall({
+  userId: '123',
+  text: 'This is a comment with an image and video stored as binary data',
+  images: [imageFile],  // Add the image binary data
+  videos: [videoFile],  // Add the video binary data
+  captions: 'This is a caption'
+});
+
+// Save the document to MongoDB
+newComment.save()
+  .then(() => console.log('Comment with binary image and video saved successfully'))
+  .catch((err) => console.error('Error saving comment:', err));
+  
+==========================================================================================================================
+  

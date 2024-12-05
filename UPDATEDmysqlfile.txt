@@ -1,0 +1,447 @@
+show databases;
+use  invent_system;
+show tables;
+select * from users123;
+
+describe users123;
+
+SHOW VARIABLES LIKE 'secure_file_priv';
+#[mysqld]
+#secure_file_priv=""
+SHOW VARIABLES LIKE 'max_allowed_packet';
+
+ALTER TABLE users123 MODIFY COLUMN profile_image LONGBLOB;
+
+DESCRIBE users123;
+
+
+
+UPDATE users123 
+SET profile_image = LOAD_FILE('F:\SQL1.png') 
+WHERE id = 103;
+
+
+
+
+
+INSERT INTO users123 (name, email, password) VALUES
+('John Doe', 'john.doe@example.com', 'password123'),
+('Jane Smith', 'jane.smith@example.com', 'securePass!'),
+('Alice Johnson', 'alice.johnson@example.com', 'alice2024'),
+('Bob Brown', 'bob.brown@example.com', 'b0bBr0wn'),
+('Charlie Davis', 'charlie.davis@example.com', 'Ch@rlieD#');
+select * from users123;
+
+ALTER TABLE users123
+ADD COLUMN role ENUM('admin', 'visitor', 'staff') DEFAULT 'visitor';
+
+select * from users123;
+ALTER TABLE users123
+ADD COLUMN role VARCHAR(255) DEFAULT 'visitor';
+SHOW VARIABLES LIKE 'secure_file_priv';
+
+ALTER TABLE users123 
+add COLUMN profile_image BLOB default null;
+
+ALTER TABLE users123 MODIFY profile_image LONGBLOB;
+
+
+
+UPDATE users123 
+SET profile_image = LOAD_FILE('F:\SQL1.png') 
+WHERE id=103;
+
+#dont work ALTER TABLE users123 
+# UPDATE COLUMN profile_image BLOB DEFAULT NULL;
+
+UPDATE users123 
+SET profile_image = LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\download.png') 
+WHERE id=103;
+
+
+SHOW VARIABLES LIKE 'local_infile';
+#[mysqld]
+#local_infile = 1
+
+
+UPDATE users123
+SET role = 'admin'
+WHERE id = 1;
+
+
+describe table users123;
+
+
+#DELETE from users123 where id >1;
+UPDATE users123
+SET name = 'Arfa'
+WHERE id = 97;
+
+DESCRIBE users123;
+use invent_system;
+
+
+
+
+
+-- Update passwords for specific users to new valid ones
+UPDATE users123
+SET password = 'NewSecureP@ssw0rd!',
+WHERE email = 'john.doe@example.com';
+
+UPDATE users123
+SET password = 'Another@ValidPass1'
+WHERE email = 'jane.smith@example.com';
+
+UPDATE users123
+SET password = 'Different#Password9'
+WHERE email = 'alice.johnson@example.com';
+
+UPDATE users123
+SET password = 'ValidP@ssw0rd2'
+WHERE email = 'bob.brown@example.com';
+
+UPDATE users123
+SET password = 'NewPassw0rd#2024'
+WHERE email = 'charlie.davis@example.com';
+
+
+DESCRIBE users123;
+
+
+
+
+
+
+
+
+
+
+
+
+
+SHOW VARIABLES LIKE 'max_allowed_packet';
+SET GLOBAL max_allowed_packet = 67108864;
+
+#4194304
+# this the correct venue
+
+INSERT INTO venues 
+    (venue_name, location, capacity, status, picture1, picture2, venue_details, venue_price, gst, total_price) 
+VALUES 
+    ('Grand Ballroom', '123 Main Street', 500, 'available', LOAD_FILE('F:/nk3.JPG'), LOAD_FILE('F:/nk4.JPG'), 'A spacious ballroom perfect for weddings and large events.', 10000.00, 18.00, 11800.00),
+    ('Lakeside Pavilion', '456 Lake Road', 200, 'booked',  LOAD_FILE('F:/ah1.JPG'), LOAD_FILE('F:/ah2.JPG'), 'A beautiful venue overlooking the lake, ideal for outdoor ceremonies.', 8000.00, 18.00, 9440.00),
+    ('Garden Terrace', '789 Garden Lane', 150, 'available',  LOAD_FILE('F:/af2.JPG'), LOAD_FILE('F:/af3.JPG'), 'A scenic garden venue surrounded by lush greenery.', 5000.00, 10.00, 5500.00),
+    ('Rooftop Hall', '321 Skyline Ave', 300, 'booked', LOAD_FILE('F:/af1.JPG'), LOAD_FILE('F:/nn1.JPG') , 'A modern rooftop venue with stunning city views.', 12000.00, 15.00, 13800.00),
+    ('Beachfront Resort', '654 Ocean Drive', 400, 'available',  LOAD_FILE('F:/cal2.JPG'), LOAD_FILE('F:/cal3.JPG'), 'A luxurious beachfront venue with breathtaking ocean views.', 15000.00, 20.00, 18000.00);
+
+
+UPDATE venues
+SET status = NULL
+WHERE venue_id IN (1, 2, 3, 4, 5);
+
+
+
+
+
+CREATE TABLE venues (
+    venue_id INT AUTO_INCREMENT PRIMARY KEY,
+    venue_name VARCHAR(100),
+    location VARCHAR(255),
+    capacity INT,
+   picture1 LONGBLOB,  -- First image for the venue
+    picture2 LONGBLOB,  -- Second image for the venue
+    venue_details TEXT,  -- Additional details about the venue
+    venue_price DECIMAL(10, 2) CHECK (venue_price > 0),  -- Base price of booking the venue (must be positive)
+    gst DECIMAL(5, 2) CHECK (gst >= 0), # --#45.57 GST (percentage) - only positive values allowed
+    total_price DECIMAL(10, 2) CHECK (total_price > 0),  -- Total price including GST (must be positive)
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+select * from bookings;
+ALTER TABLE venues
+DROP COLUMN check_in_time,
+DROP COLUMN check_out_time;
+
+#IN VENUES
+ #  check_in_time DATETIME,  -- Check-in time for the booking
+ #  check_out_time DATETIME,  -- Check-out time for the booking
+ #      CHECK (check_in_time < check_out_time),
+ #  status ENUM('booked','pending','available') DEFAULT 'available',  -- Venue booking status
+  
+CREATE TABLE bookings (
+    booking_id INT AUTO_INCREMENT PRIMARY KEY,
+    client_id INT,
+    venue_name VARCHAR(100),  -- Venue name (foreign key will be added later)
+    event_date DATE,  -- Event date
+    checkin_time TIME,  -- Check-in time for the booking
+    checkout_time TIME,  -- Check-out time for the booking
+    num_adults INT,  -- Number of adults
+    num_children INT,  -- Number of children
+    total_cost DECIMAL(10, 2),  -- Total cost
+    deposit_advance DECIMAL(10, 2),  -- Advance deposit amount
+    deposit_venue DECIMAL(10, 2),  -- Venue deposit amount
+    bstatus ENUM('pending', 'booked', 'available', 'canceled') DEFAULT 'available',  -- Booking status with default value
+    catering ENUM('yes', 'no') DEFAULT 'no',  -- Catering service option
+    decoration ENUM('yes', 'no') DEFAULT 'no',  -- Decoration service option
+    photography ENUM('yes', 'no') DEFAULT 'no',  -- Photography service option
+    supplier ENUM('yes', 'no') DEFAULT 'no',  -- Supplier service option
+    setup_time DATETIME,  -- Setup start time for the event
+    cleanup_time DATETIME,  -- Cleanup end time for the event
+    pdf_file_from_admin LONGBLOB,  -- PDF file uploaded by admin
+    pdf_file_from_client LONGBLOB,  -- PDF file uploaded by client
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- Record creation time
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,  -- Record update time
+    FOREIGN KEY (client_id) REFERENCES users123(id)  -- Foreign key to users table where role is 'visitor'
+);
+ALTER TABLE venues MODIFY venue_name VARCHAR(100) UNIQUE;
+
+ALTER TABLE bookings DROP COLUMN venue_name;
+
+
+-- First, add the venue_name column to the bookings table
+ALTER TABLE bookings 
+ADD COLUMN venue_name VARCHAR(100);
+
+-- Then, add the foreign key constraint
+ALTER TABLE bookings 
+ADD FOREIGN KEY (venue_name) REFERENCES venues(venue_name);
+
+SELECT * FROM users123;
+
+show create table bookings;
+'bookings', 'CREATE TABLE `bookings` (\n  `booking_id` int NOT NULL AUTO_INCREMENT,\n  `client_id` int DEFAULT NULL,\n  `event_date` date DEFAULT NULL,\n  `checkin_time` time DEFAULT NULL,\n  `checkout_time` time DEFAULT NULL,\n  `num_adults` int DEFAULT NULL,\n  `num_children` int DEFAULT NULL,\n  `total_cost` decimal(10,2) DEFAULT NULL,\n  `deposit_advance` decimal(10,2) DEFAULT NULL,\n  `deposit_venue` decimal(10,2) DEFAULT NULL,\n  `bstatus` enum(\'pending\',\'booked\',\'available\',\'canceled\') DEFAULT \'available\',\n  `catering` enum(\'yes\',\'no\') DEFAULT \'no\',\n  `decoration` enum(\'yes\',\'no\') DEFAULT \'no\',\n  `photography` enum(\'yes\',\'no\') DEFAULT \'no\',\n  `supplier` enum(\'yes\',\'no\') DEFAULT \'no\',\n  `setup_time` datetime DEFAULT NULL,\n  `cleanup_time` datetime DEFAULT NULL,\n  `pdf_file_from_admin` longblob,\n  `pdf_file_from_client` longblob,\n  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,\n  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,\n  `venue_name` varchar(100) DEFAULT NULL,\n  PRIMARY KEY (`booking_id`),\n  KEY `client_id` (`client_id`),\n  KEY `venue_name` (`venue_name`),\n  CONSTRAINT `bookings_ibfk_1` FOREIGN KEY (`client_id`) REFERENCES `users123` (`id`),\n  CONSTRAINT `bookings_ibfk_2` FOREIGN KEY (`venue_name`) REFERENCES `venues` (`venue_name`)\n) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci'
+ show create table venues;
+'venues', 'CREATE TABLE `venues` (\n  `venue_id` int NOT NULL AUTO_INCREMENT,\n  `venue_name` varchar(100) DEFAULT NULL,\n  `location` varchar(255) DEFAULT NULL,\n  `capacity` int DEFAULT NULL,\n  `status` enum(\'booked\',\'available\') DEFAULT \'available\',\n  `picture1` longblob,\n  `picture2` longblob,\n  `venue_details` text,\n  `venue_price` decimal(10,2) DEFAULT NULL,\n  `gst` decimal(5,2) DEFAULT NULL,\n  `total_price` decimal(10,2) DEFAULT NULL,\n  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,\n  PRIMARY KEY (`venue_id`),\n  UNIQUE KEY `venue_name` (`venue_name`),\n  CONSTRAINT `venues_chk_1` CHECK ((`venue_price` > 0)),\n  CONSTRAINT `venues_chk_2` CHECK ((`gst` >= 0)),\n  CONSTRAINT `venues_chk_3` CHECK ((`total_price` > 0))\n) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci'
+UPDATE bookings
+SET checkin_time = '2024-10-04 16:00:00',
+    checkout_time = '2024-10-05 20:00:00'
+WHERE booking_id = 19;
+
+UPDATE bookings
+SET checkin_time = '2024-10-20 12:00:00',
+    checkout_time = '2024-10-21 16:00:00'
+WHERE booking_id = 20;
+
+UPDATE bookings
+SET checkin_time = '2024-10-28 00:00:00',
+    checkout_time = '2024-10-29 23:59:59'
+WHERE booking_id = 21;
+
+UPDATE bookings
+SET checkin_time = '2024-11-01 00:00:00',
+    checkout_time = '2024-11-02 23:59:59'
+WHERE booking_id = 22;
+
+select * from bookings;
+-- Alter the table to change the column types to DATETIME
+ALTER TABLE bookings
+MODIFY checkin_time DATETIME,
+MODIFY checkout_time DATETIME;
+
+INSERT INTO bookings (
+    client_id,
+    venue_name,
+    event_date,
+    checkin_time,
+    checkout_time,
+    num_adults,
+    num_children,
+    total_cost,
+    deposit_advance,
+    deposit_venue,
+    bstatus,
+    catering,
+    decoration,
+    photography,
+    supplier,
+    setup_time,
+    cleanup_time,
+    pdf_file_from_admin,
+    pdf_file_from_client
+) VALUES 
+(103, 'Grand Ballroom', '2024-09-30', '14:00:00', '18:00:00', 50, 20, 2000.00, 500.00, 1500.00, 'booked', 'yes', 'no', 'yes', 'no', '2024-09-30 12:00:00', '2024-09-30 20:00:00',LOAD_FILE('F:/toprinting2.pdf') , LOAD_FILE('F:/week4.pdf') ),
+(1, 'Lakeside Pavilion', '2024-10-05', '15:00:00', '22:00:00', 30, 10, 1500.00, 300.00, 1200.00, 'pending', 'no', 'yes', 'no', 'yes', '2024-10-05 13:00:00', '2024-10-05 21:00:00', NULL, NULL),
+(55, 'Garden Terrace', '2024-10-10', '11:00:00', '15:00:00', 40, 5, 1800.00, 400.00, 1400.00, 'available', 'yes', 'yes', 'yes', 'no', '2024-10-10 09:00:00', '2024-10-10 17:00:00', NULL, NULL),
+(67, 'Lakeside Pavilion', '2024-10-15', '16:00:00', '20:00:00', 20, 8, 1200.00, 200.00, 1000.00, 'canceled', 'no', 'no', 'yes', 'yes', '2024-10-15 14:00:00', '2024-10-15 19:00:00', NULL, NULL),
+(74, 'Garden Terrace', '2024-10-20', '12:00:00', '16:00:00', 25, 15, 2500.00, 600.00, 1900.00, 'booked', 'yes', 'yes', 'no', 'no', '2024-10-20 10:00:00', '2024-10-20 17:00:00', NULL, NULL);
+
+INSERT INTO bookings (
+    client_id,
+    venue_name,
+    event_date,
+    checkin_time,
+    checkout_time,
+    num_adults,
+    num_children,
+    total_cost,
+    deposit_advance,
+    deposit_venue,
+    bstatus,
+    catering,
+    decoration,
+    photography,
+    supplier,
+    setup_time,
+    cleanup_time,
+    pdf_file_from_admin,
+    pdf_file_from_client
+) 
+VALUES 
+-- Block Lakeside Pavilion for 25th September 2024
+(87, 'Lakeside Pavilion', '2024-09-25', '00:00:00', '23:59:59', 0, 0, 0.00, 0.00, 0.00, 'booked', 'no', 'no', 'no', 'no', '2024-09-25 00:00:00', '2024-09-25 23:59:59', NULL, NULL),
+-- Block Lakeside Pavilion for 26th September 2024
+(87, 'Lakeside Pavilion', '2024-09-26', '00:00:00', '23:59:59', 0, 0, 0.00, 0.00, 0.00, 'booked', 'no', 'no', 'no', 'no', '2024-09-26 00:00:00', '2024-09-26 23:59:59', NULL, NULL);
+
+
+
+select * from bookings where bstatus='booked';
+
+
+
+
+
+
+
+
+
+
+
+
+
+UPDATE bookings
+SET 
+    checkin_time = '2024-09-25 00:00:00',
+    checkout_time = '2024-09-26 12:00:00'
+WHERE client_id IN (16, 20, 21);
+ALTER TABLE bookings
+ADD COLUMN venue_id INT;
+
+DESCRIBE bookings;
+
+ SELECT * FROM bookings where bstatus='booked';
+ SELECT * FROM bookings; 
+UPDATE bookings
+SET checkin_time = '2024-09-25 00:00:00', 
+    checkout_time = '2024-09-26 00:00:00'
+WHERE booking_id = 21;
+
+UPDATE bookings
+SET venue_id = 2
+WHERE venue_name = 'Lakeside Pavilion';
+UPDATE bookings
+SET venue_id = 3
+WHERE venue_name = 'Garden Terrace';
+
+
+
+grand ball  1
+lakeside pavillion 2
+terrace 3
+rooftop hall 4
+beachfort resort 5
+ALTER TABLE bookings
+ADD COLUMN venue_id INT,
+ADD CONSTRAINT fk_venue
+FOREIGN KEY (venue_id) REFERENCES venues(venue_id);
+
+select * from venues;
+SELECT * FROM venues WHERE venue_id = 1;  -- Replace '1' with an actual venue_id
+
+show create table venues;
+# Table, Create Table
+'venues', 'CREATE TABLE `venues` (\n  `venue_id` int NOT NULL AUTO_INCREMENT,\n  `venue_name` varchar(100) DEFAULT NULL,\n  `location` varchar(255) DEFAULT NULL,\n  `capacity` int DEFAULT NULL,\n  `status` enum(\'booked\',\'available\') DEFAULT \'available\',\n  `picture1` longblob,\n  `picture2` longblob,\n  `venue_details` text,\n  `venue_price` decimal(10,2) DEFAULT NULL,\n  `gst` decimal(5,2) DEFAULT NULL,\n  `total_price` decimal(10,2) DEFAULT NULL,\n  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,\n  PRIMARY KEY (`venue_id`),\n  UNIQUE KEY `venue_name` (`venue_name`),\n  CONSTRAINT `venues_chk_1` CHECK ((`venue_price` > 0)),\n  CONSTRAINT `venues_chk_2` CHECK ((`gst` >= 0)),\n  CONSTRAINT `venues_chk_3` CHECK ((`total_price` > 0))\n) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci'
+
+CREATE TABLE quotations
+(create id
+quotations from client blob
+quotations from admin blob
+)
+select * from bookings;
+
+show create table bookings;
+ bookings;
+SELECT checkin_time, checkout_time 
+               FROM bookings 
+               WHERE venue_id = 2
+                 AND bstatus = 'booked';
+
+CREATE TABLE `bookings` (
+  `booking_id` int NOT NULL AUTO_INCREMENT,
+  `client_id` int DEFAULT NULL,
+  `event_date` date DEFAULT NULL,
+  `checkin_time` datetime DEFAULT NULL,
+  `checkout_time` datetime DEFAULT NULL,
+  `num_adults` int DEFAULT NULL,
+  `num_children` int DEFAULT NULL,
+  `total_cost` decimal(10,2) DEFAULT NULL,
+  `deposit_advance` decimal(10,2) DEFAULT NULL,
+  `deposit_venue` decimal(10,2) DEFAULT NULL,
+  `bstatus` enum('pending','booked','available','canceled') DEFAULT 'available',
+  `catering` enum('yes','no') DEFAULT 'no',
+  `decoration` enum('yes','no') DEFAULT 'no',
+  `photography` enum('yes','no') DEFAULT 'no',
+  `supplier` enum('yes','no') DEFAULT 'no',
+  `setup_time` datetime DEFAULT NULL,
+  `cleanup_time` datetime DEFAULT NULL,
+  `pdf_file_from_admin` longblob,
+  `pdf_file_from_client` longblob,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `venue_name` varchar(100) DEFAULT NULL,
+  `venue_id` int DEFAULT NULL,
+  PRIMARY KEY (`booking_id`),
+  KEY `client_id` (`client_id`),
+  KEY `venue_name` (`venue_name`),
+  KEY `fk_venue` (`venue_id`),
+  CONSTRAINT `bookings_ibfk_1` FOREIGN KEY (`client_id`) REFERENCES `users123` (`id`),
+  CONSTRAINT `bookings_ibfk_2` FOREIGN KEY (`venue_name`) REFERENCES `venues` (`venue_name`),
+  CONSTRAINT `fk_venue` FOREIGN KEY (`venue_id`) REFERENCES `venues` (`venue_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+show create table venues;
+
+
+ALTER TABLE `bookings`
+MODIFY `pdf_file_from_admin` longblob DEFAULT NULL,
+MODIFY `pdf_file_from_client` longblob DEFAULT NULL;
+
+
+SELECT venue_name FROM venues WHERE venue_id = 2;
+INSERT INTO bookings (client_id, num_children, num_adults, venue_id, venue_name, checkin_time, checkout_time) 
+VALUES (1, 2, 4, 3, 'Grand Ballroom', '2024-10-15 14:00:00', '2024-10-15 18:00:00');
+
+select * from bookings;
+
+
+SELECT booking_id,checkin_time,
+checkout_time,num_adults,num_children,venue_name,venue_id FROM bookings where client_id=1;
+
+
+select * from bookings where booking_id='25';
+DELETE FROM bookings WHERE booking_id= 1;
+
+
+adminviewed  checkbox--pass it over to staff --1st copy of events
+staffviewed  checkbox pass it over to admin    --Revise copy
+iaccept
+status adminviewed staffviewed
+admin  -->pending
+eventmanger would see --> adminviewed then would make staffviewed 
+UPDATE bookings
+SET checkin_time = '2024-09-29 00:00:00', 
+    checkout_time = '2024-09-30 23:59:59'
+WHERE booking_id = 16;
+
+select * from venues;
+UPDATE venues
+SET picture1 = LOAD_FILE('F:/React_Internships/weddingmanag/frontend/public/pro3.jpg'),
+    picture2 = LOAD_FILE('F:/React_Internships/weddingmanag/frontend/public/pro4.jpg')
+WHERE venue_id = 1;
+
+UPDATE venues
+SET picture1 = LOAD_FILE('F:/React_Internships/weddingmanag/frontend/public/pro6.jpg'),
+    picture2 = LOAD_FILE('F:/React_Internships/weddingmanag/frontend/public/pro1.jpg')
+WHERE venue_id = 2;
+
+
