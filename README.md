@@ -12,6 +12,7 @@ The VTCC Function Hall Management System simplifies the process of managing even
 - Sign up with email and password.
 - Validates credentials and prevents duplicate registrations.
 
+
 ### User Login
 - Secure access using email and password.
 - Redirects to the homepage upon successful login.
